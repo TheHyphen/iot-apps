@@ -45,17 +45,17 @@ html(lang=en)
 							h4 Streaming Options
 							hr
 							.form-group
-								label(for="rate") Rate of streaming (in ms):
+								label(for="rate") Interval of streaming (in ms):
 								input#rate.form-control(type="number" min="0" value=200)
 							hr
-							p.help-text.text-muted Select a reasonable value for good results. Selected rate is used for generating random numbers
+							p.help-text.text-muted Select a reasonable value for good results. Selected interval is used for generating random numbers.
 				.col-xs-12.col-sm-12.col-md-4.col-lg-4
 					.panel.panel-default
 						.panel-body
 							h4 Connected Remote Clients: 
 								span#clients-count 0
 							p.text-muted You can open multiple clients.
-							a(href="/remote") Open Remote Client 
+							a(href="/remote" target="_blank") Open Remote Client 
 								i.glyphicon.glyphicon-new-window(style="font-size: x-small")
 						ul.list-group#clients
 	script(src="node_modules/jquery/dist/jquery.min.js" type="text/javascript")
