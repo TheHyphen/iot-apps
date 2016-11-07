@@ -11,6 +11,14 @@ Links:
 
 Note: Hosted on free tier of Heroku Cloud Platform.
 
+Usage:
+------
+Please follow this flow:
+1.  Open IOT Interface
+2.  Open Remote Client(s) from the link in the page or entering URL.
+3.  Press 'Start' to start streaming
+4.  When done, press 'Stop' to stop streaming
+
 Part - 1:
 ---------
 
@@ -74,8 +82,7 @@ The following are done by the server:
 
 2.  Socket IO - for handling sockets at client
 
-3.  PeerJS-server - for handling PeerJS connections and identity
-    > generation
+3.  PeerJS-server - for handling PeerJS connections and identity generation
 
 Part - 3:
 ---------
