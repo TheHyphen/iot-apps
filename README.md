@@ -14,9 +14,13 @@ Note: Hosted on free tier of Heroku Cloud Platform.
 Usage:
 ------
 Please follow this flow:
+
 1.  Open IOT Interface
+
 2.  Open Remote Client(s) from the link in the page or entering URL.
+
 3.  Press 'Start' to start streaming
+
 4.  When done, press 'Stop' to stop streaming
 
 Part - 1:
