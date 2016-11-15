@@ -4,12 +4,13 @@ $(function () {
 	var canvas = $("#chart");
 	refresh();
 	var chart = new SmoothieChart(),
-		series = new TimeSeries();
+	series = new TimeSeries();
 	chart.addTimeSeries(series, { lineWidth: 2, strokeStyle: '#00ff00' });
 	chart.streamTo(canvas.get(0),1000);
 
 	var browser = true;
-
+	var tries = 0;
+	var maxTries = 10;
 	var $id = $("#id");
 	var $received = $("#received");
 
@@ -22,10 +23,16 @@ $(function () {
 	peer.on('error',function (err) {
 		if(err.type == 'browser-incompatible'){
 			browser = false;
-			$("#browser").html("<div class='alert alert-danger' role='alert'>This browser is incompatible. Check <a href='http://iswebrtcready.appear.in/'>compatibiliy</a>.</div>");
+			$("#browser").html("<div class='alert alert-danger' role='alert'>This browser is incompatible. Check <a href='http://iswebrtcready.appear.in/'>compatibility</a>.</div>");
 		}
-		else
-			$("#browser").html("<div class='alert alert-danger' role='alert'>An error occured: "+ err.type +".</div>");
+		else{
+			if(tries <= maxTries){
+				tries++;
+				peer = new Peer({port: location.port, path: '/rtc', host: location.host.replace(":" + location.port, "")});
+			}
+			else
+				$("#error").html("<div class='alert alert-danger' role='alert'>Connection failed even after maximum number of tries. Please reload to try again.</div>");
+		}
 	});
 
 	peer.on('open',function (id) {
@@ -40,11 +47,11 @@ $(function () {
 		conn.on('data',function (data) {
 			$received.html(data.n);
 			series.append(new Date()
-			.getTime(), data.n);
+				.getTime(), data.n);
 		});
-	})
+	});
 
-	// Event registration
+	// Resize event registration
 	$(window).resize(refresh);
 
 	// Refresh canvas

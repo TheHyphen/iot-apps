@@ -13,7 +13,7 @@ $(function () {
 	var clients = [];
 	var connections = [];
 	var browser = true;
-
+	var maxTries
 	// Establishing Sockets and Peers
 	var socket = io('/client');
 	var peer = new Peer({ path: '/rtc', port: location.port, host: location.host.replace(":" + location.port, "") });
@@ -22,10 +22,16 @@ $(function () {
 	peer.on('error',function (err) {
 		if(err.type == 'browser-incompatible'){
 			browser = false;
-			$("#browser").html("<div class='alert alert-danger' role='alert'>This browser is incompatible. Check <a href='http://iswebrtcready.appear.in/'>compatibiliy</a>.</div>");
+			$("#browser").html("<div class='alert alert-danger' role='alert'>This browser is incompatible. Check <a href='http://iswebrtcready.appear.in/'>compatibility</a>.</div>");
 		}
-		else
-			$("#browser").html("<div class='alert alert-danger' role='alert'>An error occured: "+ err.type +".</div>");
+		else{
+			if(tries <= maxTries){
+				tries++;
+				peer = new Peer({port: location.port, path: '/rtc', host: location.host.replace(":" + location.port, "")});
+			}
+			else
+				$("#error").html("<div class='alert alert-danger' role='alert'>Connection failed even after maximum number of tries. Please reload to try again.</div>");
+		}
 	});
 
 	// Socket Events
@@ -44,7 +50,6 @@ $(function () {
 	socket.on('remote:left', function (data) {
 		if(browser === true)
 		{
-			console.log(data);
 			removeClient(data.id);
 			refreshClients();
 		}
@@ -100,7 +105,8 @@ $(function () {
 	}
 
 	function removeClient(id) {
-		clients.splice(clients.indexOf(id), 1);
+		if(clients.indexOf(id) !== -1)
+			clients.splice(clients.indexOf(id), 1);
 		for (var i = 0; i < connections.length; i++) {
 			if(connections[i].id == id){
 				connections.splice(i,1);
