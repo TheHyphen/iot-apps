@@ -13,7 +13,7 @@ $(function () {
 	var clients = [];
 	var connections = [];
 	var browser = true;
-	var maxTries
+
 	// Establishing Sockets and Peers
 	var socket = io('/client');
 	var peer = new Peer({ path: '/rtc', port: location.port, host: location.host.replace(":" + location.port, "") });
@@ -25,12 +25,7 @@ $(function () {
 			$("#browser").html("<div class='alert alert-danger' role='alert'>This browser is incompatible. Check <a href='http://iswebrtcready.appear.in/'>compatibility</a>.</div>");
 		}
 		else{
-			if(tries <= maxTries){
-				tries++;
-				peer = new Peer({port: location.port, path: '/rtc', host: location.host.replace(":" + location.port, "")});
-			}
-			else
-				$("#error").html("<div class='alert alert-danger' role='alert'>Connection failed even after maximum number of tries. Please reload to try again.</div>");
+			$("#error").html("<div class='alert alert-danger' role='alert'>Connection error: "+ err.type +". If you are behind firewall, please try to pause it for a minute an try again.</div>");
 		}
 	});
 
