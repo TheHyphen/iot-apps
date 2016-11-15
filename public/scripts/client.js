@@ -12,25 +12,42 @@ $(function () {
 	var clientId;
 	var clients = [];
 	var connections = [];
+	var browser = true;
 
 	// Establishing Sockets and Peers
 	var socket = io('/client');
 	var peer = new Peer({ path: '/rtc', port: location.port, host: location.host.replace(":" + location.port, "") });
 
+	// Handling Browser Incompatibiliy
+	peer.on('error',function (err) {
+		if(err.type == 'browser-incompatible'){
+			browser = false;
+			$("#browser").html("<div class='alert alert-danger' role='alert'>This browser is incompatible. Check <a href='http://iswebrtcready.appear.in/'>compatibiliy</a>.</div>");
+		}
+		else
+			$("#browser").html("<div class='alert alert-danger' role='alert'>An error occured: "+ err.type +".</div>");
+	});
+
 	// Socket Events
 	socket.on('remote:ready', function (data) {
-		clients.push(data.id);
-		refreshClients();
-		var conn = peer.connect(data.id);
-		connections.push({ id: data.id, conn: conn });
-		console.log("Remote added: ");
-		console.log(data.id);
+		if(browser === true)
+		{
+			clients.push(data.id);
+			refreshClients();
+			var conn = peer.connect(data.id);
+			connections.push({ id: data.id, conn: conn });
+			console.log("Remote added: ");
+			console.log(data.id);
+		}
 	});
 
 	socket.on('remote:left', function (data) {
-		console.log(data);
-		removeClient(data.id);
-		refreshClients();
+		if(browser === true)
+		{
+			console.log(data);
+			removeClient(data.id);
+			refreshClients();
+		}
 	});
 
 
